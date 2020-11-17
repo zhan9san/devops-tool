@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     # Local
     'accounts',
     'pages',
+    'environments',
+    'applications',
+    'deployments',
 ]
 
 MIDDLEWARE = [
