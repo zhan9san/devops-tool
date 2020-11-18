@@ -2,3 +2,4 @@ django
 psycopg2-binary
 django-auth-ldap
 environs
+django-debug-toolbar

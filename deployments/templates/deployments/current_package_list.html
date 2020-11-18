@@ -1,0 +1,50 @@
+{% extends '_base.html' %}
+
+{% block title %}Deployments{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+  <table id="table"
+         data-toggle="table"
+         data-filter-control="true"
+         data-click-to-select="false"
+         data-show-columns="true"
+         class="table-striped">
+    <thead>
+    <tr>
+      <th data-field="env" data-filter-control="select" data-sortable="false">env</th>
+      <th data-field="app" data-filter-control="select" data-sortable="false">app</th>
+      <th data-field="package" data-filter-control="input" data-sortable="true">package</th>
+      <th data-field="ticket" data-filter-control="input" data-sortable="false">ticket</th>
+      <th data-field="jenkins_build_url" data-sortable="false">jenkins_build_url</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for package in packages %}
+    <tr>
+      <td>{{ package.env }}</td>
+      <td>{{ package.app }}</td>
+      <td class="package">{{ package.package }}</td>
+      <td>{{ package.ticket }}</td>
+      <td>{{ package.jenkins_build_url }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+</br>
+<div>
+  <input class="btn btn-primary" type="button" onclick="GeneratePackages()" value="Generate Packages">
+  </br>
+  <p id="packages"></p>
+</div>
+<script>
+function GeneratePackages()
+{
+  var str = "";
+  $(".package").each(function(){str += $(this).text() + "</br>"})
+  $("#packages").html(str);
+}
+</script>
+{% endblock content %}

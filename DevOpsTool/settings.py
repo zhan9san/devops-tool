@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Third-party
+    'debug_toolbar',
+
     # Local
     'accounts',
     'pages',
@@ -61,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'DevOpsTool.urls'
@@ -136,6 +140,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [str(BASE_DIR.joinpath('static'))]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
@@ -187,6 +192,8 @@ AUTH_LDAP_FIND_GROUP_PERMS = True
 # Cache distinguished names and group memberships for an hour to minimize
 # LDAP traffic.
 AUTH_LDAP_CACHE_TIMEOUT = 3600
+
+INTERNAL_IPS = ['127.0.0.1']
 
 LOGGING = {
     "version": 1,

@@ -1,15 +1,14 @@
 from django.db import models
 
-from applications.models import Application, Project
+from applications.models import Application
 from environments.models import Environment
 from public.models import CommonInfo
 
 
-class Deployment(CommonInfo):
+class DeploymentBase(CommonInfo):
     env = models.ForeignKey(Environment, blank=False, null=False,
                             on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, blank=False, null=False,
-                                on_delete=models.CASCADE)
+
     app = models.ForeignKey(Application, blank=False, null=False,
                             on_delete=models.CASCADE)
 
@@ -21,11 +20,11 @@ class Deployment(CommonInfo):
         abstract = True
 
 
-class LatestPackage(Deployment):
+class CurrentPackage(DeploymentBase):
     pass
 
 
-class History(Deployment):
+class Deployment(DeploymentBase):
     def save(self, *args, **kwargs):
         defaults = {
             'name': self.name,
@@ -34,12 +33,12 @@ class History(Deployment):
             'jenkins_build_url': self.jenkins_build_url,
         }
 
-        latest_package, _ = LatestPackage.objects.update_or_create(
+        current_package, _ = CurrentPackage.objects.update_or_create(
             env=self.env,
             project=self.project,
             app=self.app,
             defaults=defaults)
 
-        latest_package.save()
+        current_package.save()
 
         super().save(*args, **kwargs)
