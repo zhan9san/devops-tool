@@ -4,14 +4,14 @@ from .models import Deployment, CurrentPackage
 
 
 class CurrentPackageListView(LoginRequiredMixin, ListView):
-    model = CurrentPackage
+    queryset = Deployment.objects.filter(status=True).select_related('env', 'app')
     context_object_name = 'packages'
     template_name = 'deployments/current_package_list.html'
     login_url = 'login'
 
 
 class DeploymentListView(LoginRequiredMixin, ListView):
-    model = Deployment
+    queryset = Deployment.objects.filter(status=True).select_related('env', 'app')
     context_object_name = 'packages'
     template_name = 'deployments/deployment_list.html'
     login_url = 'login'
