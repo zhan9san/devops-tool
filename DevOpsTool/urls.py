@@ -15,8 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
+from deployments.apis import DeploymentViewSet
 from .settings import DEBUG
+
+router = DefaultRouter()
+router.register(r'deployments', DeploymentViewSet)
 
 urlpatterns = [
     # Django admin
@@ -26,7 +31,8 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
 
     path('', include('pages.urls')),
-    path('deployments/', include('deployments.urls'))
+    path('deployments/', include('deployments.urls')),
+    path('api/', include(router.urls)),
 ]
 
 if DEBUG:
