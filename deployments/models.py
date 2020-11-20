@@ -27,7 +27,6 @@ class CurrentPackage(DeploymentBase):
 class Deployment(DeploymentBase):
     def save(self, *args, **kwargs):
         defaults = {
-            'name': self.name,
             'package': self.package,
             'ticket': self.ticket,
             'jenkins_build_url': self.jenkins_build_url,
@@ -35,7 +34,6 @@ class Deployment(DeploymentBase):
 
         current_package, _ = CurrentPackage.objects.update_or_create(
             env=self.env,
-            project=self.project,
             app=self.app,
             defaults=defaults)
 
