@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # Third-party
     'debug_toolbar',
     'rest_framework',
+    'rest_framework.authtoken',
 
     # Local
     'accounts',
