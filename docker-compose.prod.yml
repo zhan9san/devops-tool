@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.prod
+    image: zhan9san/devops-tool-web:${DEVOPS_TOOL_WEB_VERSION:-latest}
     command: gunicorn DevOpsTool.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/home/app/web/staticfiles
@@ -14,7 +15,9 @@ services:
       - ./.env.prod
 
   nginx:
-    build: ./nginx
+    build:
+      context: ./nginx
+    image: zhan9san/devops-tool-nginx:${DEVOPS_TOOL_NGINX_VERSION:-latest}
     volumes:
       - static_volume:/home/app/web/staticfiles
     ports:
