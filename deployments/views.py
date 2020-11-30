@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
-from .models import Deployment, CurrentPackage
+from .models import Deployment
 
 
 class CurrentPackageListView(LoginRequiredMixin, ListView):

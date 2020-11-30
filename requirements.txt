@@ -4,3 +4,4 @@ django-auth-ldap
 environs
 django-debug-toolbar
 djangorestframework
+gunicorn
