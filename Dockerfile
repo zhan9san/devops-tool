@@ -1,4 +1,4 @@
-FROM python:3.8.3-alpine
+FROM python:3.9-alpine3.12
 
 # set work directory
 WORKDIR /usr/src/app
@@ -8,6 +8,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # install psycopg2 dependencies
+RUN echo -e "https://mirrors.aliyun.com/alpine/v3.12/main/\nhttps://mirrors.aliyun.com/alpine/v3.12/community" \
+    > /etc/apk/repositories
 RUN apk update \
     && apk add postgresql-dev gcc python3-dev musl-dev openldap-dev
 
