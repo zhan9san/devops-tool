@@ -12,9 +12,9 @@ class DeploymentViewSet(viewsets.ModelViewSet):
     """
     queryset = Deployment.objects.all()
     serializer_class = DeploymentSerializer
-    authentication_classes = (
-        TokenAuthentication, SessionAuthentication,
-    )
+    # authentication_classes = (
+    #     TokenAuthentication, SessionAuthentication,
+    # )
     permission_classes = (
         IsAuthenticated,
     )
