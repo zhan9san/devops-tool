@@ -17,8 +17,22 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 from deployments.apis import DeploymentViewSet
 from .settings import DEBUG
+
+
+class ClaimTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        return token
+
+class ClaimTokenObtainPairView(TokenObtainPairView):
+    serializer_class = ClaimTokenObtainPairSerializer
 
 router = DefaultRouter()
 router.register(r'deployments', DeploymentViewSet)
@@ -33,6 +47,11 @@ urlpatterns = [
     path('', include('pages.urls')),
     path('deployments/', include('deployments.urls')),
     path('api/', include(router.urls)),
+    path("api/", include("accounts.urls")),
+
+    path("api-auth/", include("rest_framework.urls")),
+    path('api/token/', ClaimTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
 if DEBUG:
