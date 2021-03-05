@@ -31,8 +31,10 @@ class ClaimTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['username'] = user.username
         return token
 
+
 class ClaimTokenObtainPairView(TokenObtainPairView):
     serializer_class = ClaimTokenObtainPairSerializer
+
 
 router = DefaultRouter()
 router.register(r'deployments', DeploymentViewSet)
