@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 from environs import Env
 
@@ -21,7 +22,8 @@ env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+LOG_DIR = "/data/logs/devopstool/"
+Path(LOG_DIR).mkdir(parents=True, exist_ok=True)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -201,10 +203,45 @@ AUTH_LDAP_CACHE_TIMEOUT = 3600
 INTERNAL_IPS = ['127.0.0.1']
 
 LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {"console": {"class": "logging.StreamHandler"}},
-    "loggers": {"django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]}},
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s %(name)-12s %(lineno)d %(levelname)-8s %(message)s',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'auth': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'simple',
+            'filename': os.path.join(LOG_DIR, 'devopstool.auth.log'),
+            'maxBytes': 1024 * 1024,  # 1M
+            'backupCount': 5,
+        },
+        'file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'simple',
+            'filename': os.path.join(LOG_DIR, 'devopstool.admin.log'),
+            'maxBytes': 1024 * 1024,  # 1M
+            'backupCount': 5,
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['file'],
+            'level': env('DJANGO_LOG_LEVEL'),
+            'propagate': True,
+        },
+        'django_auth_ldap': {
+            'level': env('DJANGO_LOG_LEVEL'),
+            'handlers': ['auth'],
+            'propagate': False,
+        }
+    },
 }
 
 CORS_ALLOWED_ORIGINS = [
