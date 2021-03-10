@@ -62,6 +62,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'deployments.performance.PerformanceMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -202,6 +203,10 @@ AUTH_LDAP_CACHE_TIMEOUT = 3600
 
 INTERNAL_IPS = ['127.0.0.1']
 
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": lambda request: True,
+}
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -228,7 +233,12 @@ LOGGING = {
             'filename': os.path.join(LOG_DIR, 'devopstool.admin.log'),
             'maxBytes': 1024 * 1024,  # 1M
             'backupCount': 5,
-        }
+        },
+        'performance': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'simple',
+            'filename': os.path.join(LOG_DIR, 'devopstool.performance.log'),
+        },
     },
     'loggers': {
         '': {
@@ -240,7 +250,12 @@ LOGGING = {
             'level': env('DJANGO_LOG_LEVEL'),
             'handlers': ['auth'],
             'propagate': False,
-        }
+        },
+        "deployments.performance": {
+            "handlers": ["performance"],
+            "level": "INFO",
+            "propagate": False,
+        },
     },
 }
 
@@ -256,3 +271,13 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ]
 }
+
+CELERY_BROKER_URL = 'redis://' + env('DJANGP_CELERY_REDIS_HOST') + ':' + env('DJANGP_CELERY_REDIS_PORT') + '/' + env('DJANGP_CELERY_BROKER_DB')
+CELERY_RESULT_BACKEND = 'redis://' + env('DJANGP_CELERY_REDIS_HOST') + ':' + env('DJANGP_CELERY_REDIS_PORT') + '/' + env('DJANGP_CELERY_RESULT_DB')
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Shanghai'
+CELERYD_MAX_TASKS_PER_CHILD = 10
+CELERYD_LOG_FILE = os.path.join(LOG_DIR, "celery_work.log")
+CELERYBEAT_LOG_FILE = os.path.join(LOG_DIR, "celery_beat.log")

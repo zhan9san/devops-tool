@@ -8,5 +8,6 @@ services:
       - .:/code/
     ports:
       - 8000:8000
+      - 5555:5555
     env_file:
       - ./.env.dev

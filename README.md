@@ -1,5 +1,17 @@
 # devops-tool
 
+## Development environment
+
+Run the following comands in three different terminals
+
+```bash script
+docker-compose up --build
+docker-compose exec web celery -A DevOpsTool worker -l info
+docker-compose exec web celery flower -A DevOpsTool -l debug
+```
+
+## Production environment
+
 Keep `.env.prod` out of version control for a real-world scenario.
 
 ## Define image version tag
